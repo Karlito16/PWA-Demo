@@ -125,5 +125,9 @@
     // Set up our event listener to run the startup process
     // once loading is complete.
     window.addEventListener("load", startup, false);
+
+    // Register sw
+    navigator.serviceWorker.register("/static/js/sw.js", { scope: "/" })
+        .then(req => console.log("SW registered!", req))
+        .catch(err => console.error("Error registering service worker: ", err));
 })();
-  

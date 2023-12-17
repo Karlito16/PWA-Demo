@@ -1,0 +1,38 @@
+{
+  "name": "pwa-demo",
+  "version": "1.0.0",
+  "description": "Progressive Web App Demo. Shows usage of modern APIs, such as using device camera, background sync, offline work, push notifications, service worker, caching and installable app.",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Karlito16/PWA-Demo.git"
+  },
+  "keywords": [
+    "PWA",
+    "cache",
+    "background sync",
+    "push notification",
+    "offline work",
+    "camera native API",
+    "service worker",
+    "installable application",
+    "progressive enhancement"
+  ],
+  "author": "Karlo Dimjašević",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Karlito16/PWA-Demo/issues"
+  },
+  "homepage": "https://github.com/Karlito16/PWA-Demo#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "https": "^1.0.0",
+    "pg": "^8.11.3"
+  }
+}

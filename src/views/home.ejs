@@ -15,18 +15,28 @@
     <body>
     <%- include('navbar') %>
     
-    Welcome to PWA's home page.
+        <div class="text-center mt-4">
+            <h1>Welcome to PWA's home page.</h1>
+            <h6>Take a picture of yourself, your dog, or your favorite meal!<br>Mark your day as <b>unforgetable</b>.</h6>
+        </div>
 
-    <!-- Code from: https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos -->
-    <div class="camera">
-        <video id="video">Video stream not available.</video>
-        <button id="startButton">Take photo</button>
-    </div>
-    <canvas id="canvas"></canvas>
-    <div class="output">
-        <img id="photo" alt="The screen capture will appear in this box." />
-    </div>
-    <button id="saveButton">Save photo</button>
-   
+        <!-- Code from: https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos -->
+        <div class="container">
+            <div class="row d-flex justify-content-around">
+                <div class="camera">
+                    <video id="video">Video stream not available.</video>
+                    <button id="startButton" class="btn btn-info m-4">Take photo</button>
+                </div>
+                <canvas id="canvas"></canvas>
+                <div class="output">
+                    <img id="photo" alt="The screen capture will appear in this box." />
+                    <button id="saveButton" class="btn btn-primary m-4">Save photo</button>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center mt-5">
+                <h3>Make sure to see your uploads!</h3>
+                <a class="btn btn-success ml-5" href="/uploads">Your Uploads</a>
+            </div>
+        </div>   
     </body>
 </html>

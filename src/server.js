@@ -1,7 +1,6 @@
 const dotenv = require("dotenv");
 const express = require("express");
 const bodyParser = require("body-parser");
-const https = require("https");
 const path = require("path");
 const homeRouter = require("./routes/home.router");
 const { configureHost } = require("./utils/utils");
@@ -19,6 +18,15 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Add response middleware
+app.use((req, res, next) => {
+    // This is important when fetching sw.js file, since it is saved in /static/js, and that effects it's scope
+    // More on: https://itecnote.com/tecnote/javascript-service-workers-fetch-event-never-fires/
+    if (req.path.endsWith("sw.js"))
+        res.set("Service-Worker-Allowed", "/");
+    next();
+});
+
 // Configure static content
 app.use("/static", express.static(path.join(__dirname, "public")));
 
@@ -31,10 +39,5 @@ if (externalUrl) {
         console.log(`Server locally running at http://${hostname}:${port}/ and from outside on ${externalUrl}`);
     });
 } else {
-    https.createServer({
-        key: Buffer.from(process.env.PWAD_SERVER_KEY, "base64").toString("ascii"),
-        cert: Buffer.from(process.env.PWAD_SERVER_CERT, "base64").toString("ascii")
-    }, app).listen(port, function () {
-        console.log(`Server running at ${baseUrl}/`);
-    });
+    app.listen(port, () => console.log(`Server running at ${baseUrl}/`));
 }

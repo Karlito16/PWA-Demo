@@ -1,3 +1,5 @@
+import { set } from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm";
+
 (() => {
     // Code from: https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos
 
@@ -19,7 +21,8 @@
     let video = null;
     let canvas = null;
     let photo = null;
-    let startbutton = null;
+    let startButton = null;
+    let saveButton = null;
   
     function showViewLiveResultButton() {
         if (window.self !== window.top) {
@@ -43,7 +46,8 @@
         video = document.getElementById("video");
         canvas = document.getElementById("canvas");
         photo = document.getElementById("photo");
-        startbutton = document.getElementById("startbutton");
+        startButton = document.getElementById("startButton");
+        saveButton = document.getElementById("saveButton");
   
         navigator.mediaDevices
             .getUserMedia({ video: true, audio: false })
@@ -57,7 +61,7 @@
   
         video.addEventListener(
             "canplay",
-            (ev) => {
+            event => {
                 if (!streaming) {
                     height = video.videoHeight / (video.videoWidth / width);
         
@@ -78,22 +82,57 @@
             false,
         );
   
-        startbutton.addEventListener(
+        startButton.addEventListener(
             "click",
-            (ev) => {
+            event => {
                 takepicture();
-                ev.preventDefault();
+                event.preventDefault();
             },
             false,
         );
+
+        saveButton.addEventListener(
+            "click",
+            async event => {
+                let url = canvas.toDataURL();
+                let res = await fetch(url);
+                let image = await res.blob();
+                let time = new Date().toISOString();
+
+                // Check if browser supports Service Worker and Sync Manager
+                if ("serviceWorker" in navigator && "SyncManager" in window) {
+                    set(time, {time, image: image});
+                    navigator.serviceWorker.ready
+                        .then(swRegistration => swRegistration.sync.register("sync"))
+                        .then(() => {
+                            console.log("Queued for background sync");
+                            clearPhoto();
+                        })
+                        .catch(error => console.log(error));
+                } else {
+                    // Graceful degradation for browsers that does not support advanced APIs
+                    let formData = new FormData();
+                    formData.append("image", image, time + ".upload");
+                    fetch("/uploads", { 
+                        method: "POST", 
+                        body: formData
+                    })
+                        .then(res => {
+                            alert("Upload was successfull!");
+                            clearPhoto();
+                        })
+                        .catch(error => alert("Unable to save the photo, please try again later!"));
+                }
+            }
+        );
   
-        clearphoto();
+        clearPhoto();
     }
   
     // Fill the photo with an indication that none has been
     // captured.
   
-    function clearphoto() {
+    function clearPhoto() {
         const context = canvas.getContext("2d");
         context.fillStyle = "#AAA";
         context.fillRect(0, 0, canvas.width, canvas.height);
@@ -118,7 +157,7 @@
             const data = canvas.toDataURL("image/png");
             photo.setAttribute("src", data);
         } else {
-            clearphoto();
+            clearPhoto();
         }
     }
   
@@ -127,7 +166,7 @@
     window.addEventListener("load", startup, false);
 
     // Register sw
-    navigator.serviceWorker.register("/static/js/sw.js", { scope: "/" })
-        .then(req => console.log("SW registered!", req))
+    navigator.serviceWorker.register("/static/js/sw.js", { scope: "/", type: "module" })
+        .then(req => console.log("SW registered!"))
         .catch(err => console.error("Error registering service worker: ", err));
 })();

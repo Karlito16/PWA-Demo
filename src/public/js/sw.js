@@ -1,8 +1,15 @@
+import {
+    del,
+    entries
+} from "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm";
+
+
 const staticCacheName = "static-cache-v1";
 let filesToCache = [
     "https://code.jquery.com/jquery-3.3.1.slim.min.js",
     "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css",
     "https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js",
+    "https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm",
     "/",
     "/404",
     "/about",
@@ -69,3 +76,29 @@ self.addEventListener("fetch", event => {
             })
     );
 });
+
+
+self.addEventListener("sync", event => {
+    console.log("Background sync!", event);
+    entries().then(entries => 
+        entries.forEach(entry => {
+            let imageData = entry[1];
+            let formData = new FormData();
+            formData.append("image", imageData.image, imageData.time + ".upload");
+            fetch("/uploads", { 
+                method: "POST", 
+                body: formData
+            })
+                .then(res => {
+                    if (res.ok) {
+                        console.log("Deleting from idb: ", imageData.time);
+                        del(imageData.time);
+                    } else {
+                        // TODO: See what to do in this case
+                        console.log(res);
+                    }
+                })
+                .catch(error => console.log(error));
+        })
+    );
+})

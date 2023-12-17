@@ -131,3 +131,6 @@ dist
 
 # Package json
 package-lock.json
+
+# Upload files
+**.upload

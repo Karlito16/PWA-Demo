@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const homeRouter = require("./routes/home.router");
+const uploadsRouter = require("./routes/uploads.router");
 const { configureHost } = require("./utils/utils");
 
 dotenv.config()
@@ -32,6 +33,7 @@ app.use("/static", express.static(path.join(__dirname, "public")));
 
 // Configure routers
 app.use(homeRouter.path, homeRouter.router);
+app.use(uploadsRouter.path, uploadsRouter.router);
 
 if (externalUrl) {
     const hostname = "0.0.0.0";

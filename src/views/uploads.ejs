@@ -7,17 +7,30 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="/static/css/uploads.css">
     </head>
     <body>
-    <%- include('navbar') %>
-    
-    Your uploads.
-
-    <% for (let image of images) { %>
-        <h1><%= image.title %></h1>
-        <div class="output">
-            <img src="/static/uploads/<%= image.url %>" alt="The screen capture will appear in this box." />
+        <%- include('navbar') %>
+        
+        <div class="container mt-5">
+            <% if (images.length === 0) { %>
+                <h1 class="text-info">You don't have any uploads yet!</h1>
+                <a class="btn btn-primary" href="/">Upload!</a>
+            <% } else { %>
+                <h1 class="text-info mb-5">Your uploads are here!</h1>
+                <div class="row">
+                    <% for (let image of images) { %>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img class="card-img-top" src="/static/uploads/<%= image.url %>" alt="The screen capture will appear in this box." />    
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= image.title %></h5>
+                                </div>
+                            </div>
+                        </div>                    
+                    <% } %>
+                </div>
+            <% } %>
         </div>
-    <% } %>
     </body>
 </html>

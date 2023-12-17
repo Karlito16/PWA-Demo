@@ -7,6 +7,10 @@ const router = express.Router();
 
 // Code from: https://stackoverflow.com/questions/65529221/how-to-change-a-file-originalname-in-multer
 const UPLOAD_DIR = path.join(__dirname, "..", "public/uploads");
+if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR);
+}
+
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, UPLOAD_DIR);

@@ -6,10 +6,24 @@
         <title>PWA Demo | Home</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="/static/css/home.css">
+        <script src="/static/js/home.js"></script>
     </head>
     <body>
     <%- include('navbar') %>
     
     Welcome to PWA's home page.
+
+    <!-- Code from: https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API/Taking_still_photos -->
+    <div class="camera">
+        <video id="video">Video stream not available.</video>
+        <button id="startbutton">Take photo</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <div class="output">
+        <img id="photo" alt="The screen capture will appear in this box." />
+    </div>
+   
     </body>
 </html>

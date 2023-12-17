@@ -19,6 +19,9 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Configure static content
+app.use("/static", express.static(path.join(__dirname, "public")));
+
 // Configure routers
 app.use(homeRouter.path, homeRouter.router);
 
